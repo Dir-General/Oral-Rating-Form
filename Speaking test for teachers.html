@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEVAZ - Oral Rating Form Elite</title>
+    <style>
+        :root {
+            --blue: #0b5394;
+            --red: #cc0000;
+            --bg: #f4f4f4;
+            --border: #e2e8f0;
+            --text-dark: #334155;
+            --green: #10b981;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo { width: 220px; margin-bottom: 15px; }
+        h1 { color: var(--blue); font-size: 24px; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
+        .subtitle { color: #64748b; font-style: italic; font-size: 14px; margin-top: 5px; }
+
+        .meta-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 25px 40px;
+            background: #fcfcfc;
+            border-bottom: 1px solid #eee;
+        }
+
+        .input-field label {
+            display: block;
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--blue);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .section {
+            padding: 30px 40px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header::before {
+            content: '';
+            width: 4px;
+            height: 22px;
+            background-color: var(--red);
+            margin-right: 12px;
+            border-radius: 2px;
+        }
+
+        .section-title {
+            color: var(--blue);
+            font-weight: 800;
+            font-size: 17px;
+            text-transform: uppercase;
+        }
+
+        .section-title span {
+            color: #64748b; font-weight: normal; font-size: 14px; text-transform: none; margin-left: 5px; font-style: italic;
+        }
+
+        .option-card {
+            display: flex;
+            align-items: center;
+            padding: 12px 18px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-card:hover { border-color: var(--blue); background-color: #f8fafc; }
+        .option-card.active { border-color: var(--blue); background-color: #f1f5f9; box-shadow: 0 0 0 1px var(--blue); }
+
+        .radio-circle {
+            width: 18px; height: 18px; border: 2px solid #cbd5e1; border-radius: 50%;
+            margin-right: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+
+        .option-card.active .radio-circle { border-color: var(--blue); }
+        .option-card.active .radio-circle::after { content: ''; width: 10px; height: 10px; background: var(--blue); border-radius: 50%; }
+
+        .score-pill {
+            background-color: var(--blue); color: white; font-size: 12px; font-weight: bold;
+            padding: 3px 12px; border-radius: 15px; margin-right: 15px; min-width: 15px; text-align: center;
+        }
+
+        .text { font-size: 14px; color: #475569; line-height: 1.5; }
+
+        .footer { background-color: #fff; padding: 50px 40px; text-align: center; border-top: 3px solid var(--blue); }
+        .total-percentage { font-size: 72px; font-weight: 900; color: var(--blue); margin: 0; line-height: 1; }
+        .points-label { color: #64748b; font-weight: bold; font-size: 16px; margin-bottom: 30px; }
+
+        .button-group { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        
+        .btn {
+            border: none; padding: 15px 35px; border-radius: 50px; font-weight: bold; 
+            font-size: 14px; text-transform: uppercase; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .btn-sync { background: var(--green); color: white; box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2); }
+        .btn-sync:hover { background: #059669; transform: translateY(-2px); }
+
+        .btn-print { background: #64748b; color: white; }
+        .btn-print:hover { background: #475569; }
+
+        .btn-clear { background: #f1f5f9; color: #64748b; border: 1px solid var(--border); }
+        .btn-clear:hover { background: #e2e8f0; }
+
+        .btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
+
+        /* REGLAS DE IMPRESIÓN */
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border: none; max-width: 100%; }
+            .no-print { display: none !important; }
+            .option-card { border: 1px solid #eee !important; }
+            .option-card.active { background-color: #f1f5f9 !important; -webkit-print-color-adjust: exact; }
+            .footer { border-top: 1px solid #eee; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <img src="logo.png" alt="CEVAZ Logo" class="logo">
+        <h1>Oral Rating Form</h1>
+        <div class="subtitle">Standardized Assessment Tool - Georgetown University System</div>
+    </div>
+
+    <div class="meta-info">
+        <div class="input-field">
+            <label>Candidate Name</label>
+            <input type="text" id="candidateName" placeholder="Full Name">
+        </div>
+        <div class="input-field">
+            <label>Date of Evaluation</label>
+            <input type="date" id="evalDate">
+        </div>
+        <div class="input-field">
+            <label>Evaluator</label>
+            <input type="text" id="evaluatorName" placeholder="Examiner Name">
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header"><div class="section-title">I. Comprehension</div></div>
+        <div class="option-card" data-area="c" data-val="5" onclick="setScore(this,'c',5)"><div class="radio-circle"></div><div class="score-pill">5</div><div class="text">Understands everything in both formal and colloquial contexts at native speed.</div></div>
+        <div class="option-card" data-area="c" data-val="4" onclick="setScore(this,'c',4)"><div class="radio-circle"></div><div class="score-pill">4</div><div class="text">Understands quite well without difficulty; misses only rare specialized idioms.</div></div>
+        <div class="option-card" data-area="c" data-val="3" onclick="setScore(this,'c',3)"><div class="radio-circle"></div><div class="score-pill">3</div><div class="text">Understands most of what is said if the speaker is deliberate and clear.</div></div>
+        <div class="option-card" data-area="c" data-val="2" onclick="setScore(this,'c',2)"><div class="radio-circle"></div><div class="score-pill">2</div><div class="text">Understands only slow, simplified speech with frequent repetitions.</div></div>
+        <div class="option-card" data-area="c" data-val="1" onclick="setScore(this,'c',1)"><div class="radio-circle"></div><div class="score-pill">1</div><div class="text">Understands too little to be able to carry on a conversation.</div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-header"><div class="section-title">II. Pronunciation <span>(including word accent and sentence pitch)</span></div></div>
+        <div class="option-card" data-area="p" data-val="5" onclick="setScore(this,'p',5)"><div class="radio-circle"></div><div class="score-pill">5</div><div class="text">Has few traces of foreign accent; intonation is native-like.</div></div>
+        <div class="option-card" data-area="p" data-val="4" onclick="setScore(this,'p',4)"><div class="radio-circle"></div><div class="score-pill">4</div><div class="text">Always intelligible, though one is conscious of a definite accent.</div></div>
+        <div class="option-card" data-area="p" data-val="3" onclick="setScore(this,'p',3)"><div class="radio-circle"></div><div class="score-pill">3</div><div class="text">Pronunciation problems necessitate concentrated listening.</div></div>
+        <div class="option-card" data-area="p" data-val="2" onclick="setScore(this,'p',2)"><div class="radio-circle"></div><div class="score-pill">2</div><div class="text">Very hard to understand; must frequently repeat.</div></div>
+        <div class="option-card" data-area="p" data-val="1" onclick="setScore(this,'p',1)"><div class="radio-circle"></div><div class="score-pill">1</div><div class="text">Pronunciation makes understanding almost impossible.</div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-header"><div class="section-title">III. Grammar and Word Order</div></div>
+        <div class="option-card" data-area="g" data-val="5" onclick="setScore(this,'g',5)"><div class="radio-circle"></div><div class="score-pill">5</div><div class="text">Makes very few errors in even the most complex structures.</div></div>
+        <div class="option-card" data-area="g" data-val="4" onclick="setScore(this,'g',4)"><div class="radio-circle"></div><div class="score-pill">4</div><div class="text">Occasionally makes errors that do not obscure meaning.</div></div>
+        <div class="option-card" data-area="g" data-val="3" onclick="setScore(this,'g',3)"><div class="radio-circle"></div><div class="score-pill">3</div><div class="text">Makes frequent errors which occasionally obscure meaning.</div></div>
+        <div class="option-card" data-area="g" data-val="2" onclick="setScore(this,'g',2)"><div class="radio-circle"></div><div class="score-pill">2</div><div class="text">Grammar and word order make comprehension difficult.</div></div>
+        <div class="option-card" data-area="g" data-val="1" onclick="setScore(this,'g',1)"><div class="radio-circle"></div><div class="score-pill">1</div><div class="text">Errors in grammar make conversation virtually impossible.</div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-header"><div class="section-title">IV. Vocabulary</div></div>
+        <div class="option-card" data-area="v" data-val="5" onclick="setScore(this,'v',5)"><div class="radio-circle"></div><div class="score-pill">5</div><div class="text">Use of vocabulary and idioms is virtually that of a native speaker.</div></div>
+        <div class="option-card" data-area="v" data-val="4" onclick="setScore(this,'v',4)"><div class="radio-circle"></div><div class="score-pill">4</div><div class="text">Rarely has trouble expressing himself with appropriate vocabulary.</div></div>
+        <div class="option-card" data-area="v" data-val="3" onclick="setScore(this,'v',3)"><div class="radio-circle"></div><div class="score-pill">3</div><div class="text">Sometimes uses inappropriate terms or round-about language.</div></div>
+        <div class="option-card" data-area="v" data-val="2" onclick="setScore(this,'v',2)"><div class="radio-circle"></div><div class="score-pill">2</div><div class="text">Frequently uses wrong words; limited to simple vocabulary.</div></div>
+        <div class="option-card" data-area="v" data-val="1" onclick="setScore(this,'v',1)"><div class="radio-circle"></div><div class="score-pill">1</div><div class="text">Limited vocabulary makes comprehension difficult.</div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-header"><div class="section-title">V. Speed and Sentence Length</div></div>
+        <div class="option-card" data-area="s" data-val="5" onclick="setScore(this,'s',5)"><div class="radio-circle"></div><div class="score-pill">5</div><div class="text">Speech speed and sentence length are those of a native speaker.</div></div>
+        <div class="option-card" data-area="s" data-val="4" onclick="setScore(this,'s',4)"><div class="radio-circle"></div><div class="score-pill">4</div><div class="text">Speed of speech seems slightly affected by language problems.</div></div>
+        <div class="option-card" data-area="s" data-val="3" onclick="setScore(this,'s',3)"><div class="radio-circle"></div><div class="score-pill">3</div><div class="text">Speed and length affected by language difficulties.</div></div>
+        <div class="option-card" data-area="s" data-val="2" onclick="setScore(this,'s',2)"><div class="radio-circle"></div><div class="score-pill">2</div><div class="text">Speed and length seem strongly affected by language limitations.</div></div>
+        <div class="option-card" data-area="s" data-val="1" onclick="setScore(this,'s',1)"><div class="radio-circle"></div><div class="score-pill">1</div><div class="text">Speech so halting and fragmentary that conversation is difficult.</div></div>
+    </div>
+
+    <div class="footer">
+        <p style="text-transform: uppercase; font-size: 11px; font-weight: bold; color: #64748b; margin-bottom: 5px;">Final Score</p>
+        <h2 class="total-percentage" id="finalPct">0%</h2>
+        <p class="points-label" id="finalPoints">0 / 25 Total Rating Points</p>
+        
+        <div class="button-group no-print">
+            <button class="btn btn-clear" onclick="clearForm()">Clear All</button>
+            <button class="btn btn-print" onclick="window.print()">Print / Save PDF</button>
+            <button class="btn btn-sync" onclick="syncToCloud()">Sync to Sheets</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let scores = { c: 0, p: 0, g: 0, v: 0, s: 0 };
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEJjthuejEWMFp-EMnWAZtO3bvyaRrlbdD9paBkPqmc4oXF2fUVeJoFAqnbZ_j9U9Z/exec';
+
+    window.onload = () => { resetDate(); };
+
+    function resetDate() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('evalDate').value = today;
+    }
+
+    function setScore(element, area, value) {
+        const parent = element.parentNode;
+        parent.querySelectorAll('.option-card').forEach(card => card.classList.remove('active'));
+        element.classList.add('active');
+        scores[area] = value;
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        const total = Object.values(scores).reduce((a, b) => a + b, 0);
+        document.getElementById('finalPct').innerText = (total * 4) + '%';
+        document.getElementById('finalPoints').innerText = total + ' / 25 Total Rating Points';
+    }
+
+    function clearForm() {
+        if(confirm("¿Estás seguro de que deseas borrar todos los datos de esta evaluación?")) {
+            document.getElementById('candidateName').value = "";
+            document.getElementById('evaluatorName').value = "";
+            resetDate();
+            document.querySelectorAll('.option-card').forEach(card => card.classList.remove('active'));
+            scores = { c: 0, p: 0, g: 0, v: 0, s: 0 };
+            updateDisplay();
+            window.scrollTo(0, 0);
+        }
+    }
+
+    async function syncToCloud() {
+        const candidate = document.getElementById('candidateName').value;
+        const evaluator = document.getElementById('evaluatorName').value;
+        const date = document.getElementById('evalDate').value;
+        const totalPoints = Object.values(scores).reduce((a, b) => a + b, 0);
+        const allRated = Object.values(scores).every(v => v > 0);
+
+        if (!candidate || !evaluator || !date) { alert("⚠️ Completa los datos del candidato."); return; }
+        if (!allRated) { alert("⚠️ Califica todas las áreas antes de sincronizar."); return; }
+
+        const btn = document.querySelector('.btn-sync');
+        btn.disabled = true;
+        btn.innerText = "Syncing...";
+
+        try {
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({
+                    candidate, evaluator, date,
+                    c: scores.c, p: scores.p, g: scores.g, v: scores.v, s: scores.s,
+                    points: totalPoints, percentage: (totalPoints * 4) + "%"
+                })
+            });
+            alert("✅ ¡Éxito! Datos sincronizados correctamente.");
+        } catch (e) {
+            alert("❌ Error de red.");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Sync to Sheets";
+        }
+    }
+</script>
+
+</body>
+</html>
